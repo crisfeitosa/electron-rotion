@@ -1,0 +1,10 @@
+@import "tailwindcss";
+
+html {
+  overflow: hidden;
+}
+
+body {
+  background-image: url('../assets/wavy-lines.svg') no-repeat;
+}
+
