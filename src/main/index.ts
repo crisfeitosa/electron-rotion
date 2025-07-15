@@ -8,7 +8,14 @@ function createWindow(): void {
     height: 670,
     show: false,
     autoHideMenuBar: true,
-    ...(process.platform === 'linux' ? {} : {}),
+    backgroundColor: '#17141f',
+    ...(process.platform === 'linux'
+      ? {
+          icon: is.dev
+            ? path.resolve(__dirname, '../../resources/icon.png')
+            : path.resolve(__dirname, '../../build/icon.png'),
+        }
+      : {}),
     webPreferences: {
       preload: path.join(__dirname, '../preload/index.js'),
       sandbox: false,
