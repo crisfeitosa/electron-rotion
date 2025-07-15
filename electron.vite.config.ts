@@ -5,14 +5,19 @@ import tailwindcss from '@tailwindcss/vite'
 
 export default defineConfig({
   main: {
+    define: {
+      'process.platform': JSON.stringify(process.platform),
+    },
     plugins: [externalizeDepsPlugin()],
-
     publicDir: path.resolve('resources'),
   },
   preload: {
     plugins: [externalizeDepsPlugin()],
   },
   renderer: {
+    define: {
+      'process.platform': JSON.stringify(process.platform),
+    },
     resolve: {
       alias: {
         '@renderer': resolve('src/renderer/src'),

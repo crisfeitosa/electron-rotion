@@ -1,5 +1,6 @@
 import { app, shell, BrowserWindow, ipcMain } from 'electron'
 import path from 'node:path'
+import { platform } from 'node:process'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 
 function createWindow(): void {
@@ -9,7 +10,7 @@ function createWindow(): void {
     show: false,
     autoHideMenuBar: true,
     backgroundColor: '#17141f',
-    ...(process.platform === 'linux'
+    ...(platform === 'linux'
       ? {
           icon: is.dev
             ? path.resolve(__dirname, '../../resources/icon.png')
@@ -38,7 +39,7 @@ function createWindow(): void {
   }
 }
 
-if (process.platform === 'darwin') {
+if (platform === 'darwin') {
   const iconPath = is.dev
     ? path.resolve(__dirname, '../../resources/icon.png')
     : path.resolve(__dirname, 'icon.png')
@@ -62,7 +63,7 @@ app.whenReady().then(() => {
 })
 
 app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') {
+  if (platform !== 'darwin') {
     app.quit()
   }
 })
