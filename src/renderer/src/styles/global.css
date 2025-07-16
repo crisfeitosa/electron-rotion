@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 @theme {
-  --font-inter: Inter, sans-serif;
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
 
   --color-rotion-50: #ebeaed;
   --color-rotion-100: #c1bfc7;
@@ -13,6 +13,19 @@
   --color-rotion-700: #272235;
   --color-rotion-800: #1e1a29;
   --color-rotion-900: #17141f;
+}
+
+* {
+  font-family: var(--font-sans);
+}
+
+/* Custom utilities */
+.region-drag {
+  -webkit-app-region: drag;
+}
+
+.region-no-drag {
+  -webkit-app-region: no-drag;
 }
 
 html {
