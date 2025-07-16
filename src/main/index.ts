@@ -1,5 +1,6 @@
 import { app, shell, BrowserWindow, ipcMain } from 'electron'
 import path from 'node:path'
+import { registerRoute } from '../lib/electron-router-dom'
 import { platform } from 'node:process'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 
@@ -23,6 +24,12 @@ function createWindow(): void {
       preload: path.join(__dirname, '../preload/index.js'),
       sandbox: false,
     },
+  })
+
+  registerRoute({
+    id: 'main',
+    browserWindow: mainWindow,
+    htmlFile: path.join(__dirname, '../renderer/index.html'),
   })
 
   mainWindow.on('ready-to-show', () => {
