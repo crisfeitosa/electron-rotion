@@ -1,10 +1,10 @@
-import { app, shell, BrowserWindow, ipcMain } from 'electron'
+import { app, shell, BrowserWindow } from 'electron'
 import path from 'node:path'
 import { registerRoute } from '../lib/electron-router-dom'
 import { platform } from 'node:process'
-import { electronApp, optimizer, is } from '@electron-toolkit/utils'
+import { is } from '@electron-toolkit/utils'
 
-function createWindow(): void {
+async function createMainWindow() {
   const mainWindow = new BrowserWindow({
     width: 900,
     height: 670,
@@ -20,10 +20,6 @@ function createWindow(): void {
             : path.resolve(__dirname, '../../build/icon.png'),
         }
       : {}),
-    webPreferences: {
-      preload: path.join(__dirname, '../preload/index.js'),
-      sandbox: false,
-    },
   })
 
   registerRoute({
@@ -32,20 +28,7 @@ function createWindow(): void {
     htmlFile: path.join(__dirname, '../renderer/index.html'),
   })
 
-  mainWindow.on('ready-to-show', () => {
-    mainWindow.show()
-  })
-
-  mainWindow.webContents.setWindowOpenHandler((details) => {
-    shell.openExternal(details.url)
-    return { action: 'deny' }
-  })
-
-  if (is.dev && process.env.ELECTRON_RENDERER_URL) {
-    mainWindow.loadURL(process.env.ELECTRON_RENDERER_URL)
-  } else {
-    mainWindow.loadFile(path.join(__dirname, '../renderer/index.html'))
-  }
+  mainWindow.on('ready-to-show', mainWindow.show)
 }
 
 if (platform === 'darwin') {
@@ -56,23 +39,25 @@ if (platform === 'darwin') {
 }
 
 app.whenReady().then(() => {
-  electronApp.setAppUserModelId('com.electron')
-
-  app.on('browser-window-created', (_, window) => {
-    optimizer.watchWindowShortcuts(window)
-  })
-
-  ipcMain.on('ping', () => console.log('pong'))
-
-  createWindow()
+  createMainWindow()
 
   app.on('activate', function () {
-    if (BrowserWindow.getAllWindows().length === 0) createWindow()
+    if (BrowserWindow.getAllWindows().length === 0) createMainWindow()
   })
 })
 
 app.on('window-all-closed', () => {
-  if (platform !== 'darwin') {
+  if (process.platform !== 'darwin') {
     app.quit()
   }
 })
+
+app.on('web-contents-created', (_, contents) =>
+  contents.on('will-navigate', (event, url) => {
+    event.preventDefault()
+
+    if (url.startsWith(process.env.ELECTRON_RENDERER_URL!)) return
+
+    shell.openExternal(url)
+  }),
+)
