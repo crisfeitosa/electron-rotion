@@ -1,15 +1,20 @@
 import { Route } from 'react-router-dom'
+import { Router } from '../../lib/electron-router-dom'
 
 import { Blank } from './pages/blank'
-import { Router } from '../../lib/electron-router-dom'
+import { Default } from './pages/layouts/default'
+import { Loading } from './components/Loading'
 
 export function Routes() {
   return (
     <Router
+      _providerProps={{
+        fallbackElement: <Loading />,
+      }}
       main={
-        <>
+        <Route path="/" element={<Default />}>
           <Route path="/" element={<Blank />} />
-        </>
+        </Route>
       }
     />
   )
