@@ -5,7 +5,18 @@ import { Document } from '@tiptap/extension-document'
 import Typography from '@tiptap/extension-typography'
 import { EditorContent, useEditor } from '@tiptap/react'
 
-export function Editor() {
+export interface OnContentUpdatedParams {
+  title: string
+  subtitle: string
+  content: string
+}
+
+interface EditorProps {
+  content: string
+  onContentUpdated: (params: OnContentUpdatedParams) => void
+}
+
+export function Editor({ content, onContentUpdated }: EditorProps) {
   const editor = useEditor({
     extensions: [
       Document.extend({
@@ -22,8 +33,22 @@ export function Editor() {
           'before:content-[attr(data-placeholder)] before:text-gray-500 before:h-0 before:float-left before:pointer-events-none',
       }),
     ],
-    content:
-      '<h1>Back-end</h1><p>Esse é o documento que explica sobre back-end.</p>',
+    onUpdate: ({ editor }) => {
+      const contentRegex =
+        /(<h1>(?<title>.+)<\/h1>)(<h2>(?<subtitle>.+)<\/h2>)?(?<content>.+)?/
+      const parsedContent = editor.getHTML().match(contentRegex)?.groups
+
+      const title = parsedContent?.title ?? 'Untitled'
+      const subtitle = parsedContent?.subtitle ?? ''
+      const content = parsedContent?.content ?? ''
+
+      onContentUpdated({
+        title,
+        subtitle,
+        content,
+      })
+    },
+    content,
     autofocus: 'end',
     editorProps: {
       attributes: {
