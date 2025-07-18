@@ -1,7 +1,13 @@
+import { useParams } from 'react-router-dom'
+
 import { Editor } from '../components/Editor'
 import { ToC } from '../components/ToC'
 
 export function Document() {
+  const { id } = useParams<{ id: string }>()
+
+  console.log('Document ID:', id)
+
   return (
     <main className="flex-1 flex py-12 px-10 gap-8">
       <aside className="hidden lg:block sticky top-0">
