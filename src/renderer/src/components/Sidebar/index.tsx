@@ -45,7 +45,7 @@ export function Sidebar() {
               {data?.map((document) => {
                 return (
                   <Navigation.Link
-                    // to={`/documents/${document.id}`}
+                    to={`/documents/${document.id}`}
                     key={document.id}
                   >
                     {document.title}
