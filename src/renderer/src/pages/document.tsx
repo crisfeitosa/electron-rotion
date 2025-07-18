@@ -16,6 +16,7 @@ export function Document() {
 
       return response.data
     },
+    enabled: !!id,
   })
 
   const { mutateAsync: saveDocument } = useMutation({
