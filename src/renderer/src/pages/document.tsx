@@ -36,9 +36,8 @@ export function Document() {
         return documents?.map((document) => {
           if (document.id === id) {
             return { ...document, title }
-          } else {
-            return document
           }
+          return document
         })
       })
     },
