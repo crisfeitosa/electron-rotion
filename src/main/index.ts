@@ -22,7 +22,7 @@ async function createMainWindow() {
     trafficLightPosition: { x: 20, y: 20 },
     ...(process.platform === 'linux' ? { icon } : {}),
     webPreferences: {
-      preload: path.join(__dirname, '../preload/index.cjs'),
+      preload: path.join(__dirname, '../preload/index.js'),
       sandbox: false,
     },
   })
