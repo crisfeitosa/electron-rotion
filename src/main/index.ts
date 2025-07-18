@@ -3,10 +3,10 @@ import path from 'node:path'
 import { createTray } from './tray'
 import { createShortcuts } from './shortcuts'
 import { registerRoute } from '../lib/electron-router-dom'
-import icon from '../../resources/icon.png'
+import icon from '../../resources/icon.png?asset'
 
 import { platform } from 'node:process'
-import { electronApp, optimizer, is } from '@electron-toolkit/utils'
+import { electronApp, optimizer } from '@electron-toolkit/utils'
 
 import './ipc'
 import './store'
@@ -40,9 +40,7 @@ async function createMainWindow() {
 }
 
 if (platform === 'darwin') {
-  const iconPath = is.dev
-    ? path.resolve(__dirname, '../../resources/icon.png')
-    : path.resolve(__dirname, 'icon.png')
+  const iconPath = path.resolve(__dirname, icon)
   app.dock?.setIcon(iconPath)
 }
 
