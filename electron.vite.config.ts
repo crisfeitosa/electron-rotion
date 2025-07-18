@@ -28,6 +28,6 @@ export default defineConfig({
         '@renderer': resolve('src/renderer/src'),
       },
     },
-    plugins: [tailwindcss(), react()],
+    plugins: [tsconfigPaths, tailwindcss(), react()],
   },
 })
