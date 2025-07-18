@@ -1,9 +1,12 @@
 import { BrowserWindow, Menu, nativeImage, Tray } from 'electron'
+import { is } from '@electron-toolkit/utils'
 import path from 'node:path'
 
 export function createTray(window: BrowserWindow) {
   const icon = nativeImage.createFromPath(
-    path.resolve(__dirname, 'rotionTemplate@3x.png'),
+    is.dev
+      ? path.resolve(__dirname, '../../resources/rotionTemplate@3x.png')
+      : path.resolve(__dirname, 'rotionTemplate@3x.png'),
   )
 
   const tray = new Tray(icon)
