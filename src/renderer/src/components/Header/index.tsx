@@ -43,6 +43,7 @@ export function Header({ isSidebarOpen }: HeaderProps) {
 
       return response.data
     },
+    enabled: !!id,
   })
 
   return (
