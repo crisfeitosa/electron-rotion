@@ -1,19 +1,49 @@
 import clsx from 'clsx'
+import * as Breadcrumbs from './Breadcrumbs'
+import { Document } from '@/shared/types/ipc'
+import { useNavigate, useParams } from 'react-router-dom'
 import * as Collapsible from '@radix-ui/react-collapsible'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import {
   Code,
   CaretDoubleRight,
   CaretDoubleLeft,
   TrashSimple,
 } from 'phosphor-react'
-import * as Breadcrumbs from './Breadcrumbs'
 
 interface HeaderProps {
   isSidebarOpen: boolean
 }
 
 export function Header({ isSidebarOpen }: HeaderProps) {
+  const { id } = useParams<{ id: string }>()
+  const queryClient = useQueryClient()
+  const navigate = useNavigate()
+
   const isMacOS = process.platform === 'darwin'
+
+  const { mutateAsync: deleteDocument, isPending: isDeletingDocument } =
+    useMutation({
+      mutationFn: async () => {
+        await window.api.deleteDocument({ id: id! })
+      },
+      onSuccess: () => {
+        queryClient.setQueryData<Document[]>(['documents'], (documents) => {
+          return documents?.filter((document) => document.id !== id)
+        })
+
+        navigate('/')
+      },
+    })
+
+  const { data } = useQuery({
+    queryKey: ['document', id],
+    queryFn: async () => {
+      const response = await window.api.fetchDocument({ id: id! })
+
+      return response.data
+    },
+  })
 
   return (
     <div
@@ -39,27 +69,31 @@ export function Header({ isSidebarOpen }: HeaderProps) {
         )}
       </Collapsible.Trigger>
 
-      <>
-        <Breadcrumbs.Root>
-          <Breadcrumbs.Item>
-            <Code weight="bold" className="h-4 w-4 text-pink-500" />
-            Estrutura técnica
-          </Breadcrumbs.Item>
-          <Breadcrumbs.Separator />
-          <Breadcrumbs.HiddenItems />
-          <Breadcrumbs.Separator />
-          <Breadcrumbs.Item>Back-end</Breadcrumbs.Item>
-          <Breadcrumbs.Separator />
-          <Breadcrumbs.Item isActive>Untitled</Breadcrumbs.Item>
-        </Breadcrumbs.Root>
+      {id && (
+        <>
+          <Breadcrumbs.Root>
+            <Breadcrumbs.Item>
+              <Code weight="bold" className="h-4 w-4 text-pink-500" />
+              Estrutura técnica
+            </Breadcrumbs.Item>
+            <Breadcrumbs.Separator />
+            <Breadcrumbs.HiddenItems />
+            <Breadcrumbs.Separator />
+            <Breadcrumbs.Item isActive>{data?.title}</Breadcrumbs.Item>
+          </Breadcrumbs.Root>
 
-        <div className="inline-flex region-no-drag">
-          <button className="inline-flex items-center gap-1 text-rotion-100 text-sm hover:text-rotion-50 cursor-pointer">
-            <TrashSimple className="h-4 w-4" />
-            Apagar
-          </button>
-        </div>
-      </>
+          <div className="inline-flex region-no-drag">
+            <button
+              onClick={() => deleteDocument()}
+              className="inline-flex items-center gap-1 text-rotion-100 text-sm hover:text-rotion-50 cursor-pointer"
+              disabled={isDeletingDocument}
+            >
+              <TrashSimple className="h-4 w-4" />
+              Apagar
+            </button>
+          </div>
+        </>
+      )}
     </div>
   )
 }

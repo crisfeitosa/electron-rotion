@@ -10,7 +10,7 @@ export function Document() {
   const queryClient = useQueryClient()
 
   const { data, isFetching } = useQuery({
-    queryKey: ['documents', id],
+    queryKey: ['document', id],
     queryFn: async () => {
       const response = await window.api.fetchDocument({ id: id! })
 
