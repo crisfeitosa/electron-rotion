@@ -1,11 +1,19 @@
+import { useState } from 'react'
 import { CaretDown, User } from 'phosphor-react'
 
 export function Profile() {
-  const isAuthenticated = false
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
+
+  function toggleAuthentication() {
+    setIsAuthenticated((state) => !state)
+  }
 
   if (!isAuthenticated) {
     return (
-      <button className="text-rotion-100 flex mx-5 items-center gap-2 text-sm font-medium group">
+      <button
+        className="text-rotion-100 flex mx-5 items-center gap-2 text-sm font-medium group cursor-pointer"
+        onClick={toggleAuthentication}
+      >
         <div className="h-5 w-5 rounded-sm bg-rotion-500 p-1">
           <User className="h-3 w-3 text-rotion-300" />
         </div>
@@ -15,10 +23,13 @@ export function Profile() {
   }
 
   return (
-    <button className="text-rotion-50 flex mx-5 items-center gap-2 text-sm font-medium group">
+    <button
+      className="text-rotion-50 flex mx-5 items-center gap-2 text-sm font-medium group cursor-pointer"
+      onClick={toggleAuthentication}
+    >
       <img
         className="h-5 w-5 rounded-sm"
-        src="https://avatars.githubusercontent.com/u/2254731?v=4"
+        src="https://github.com/crisfeitosa.png"
         alt=""
       />
       Cristiano Feitosa
