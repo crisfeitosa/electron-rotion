@@ -19,9 +19,12 @@ export function Item({ isActive = false, children }: ItemProps) {
   return (
     <Comp
       onClick={handleNavigate}
-      className={clsx('inline-flex items-center gap-2 hover:text-rotion-50', {
-        'text-rotion-50': isActive,
-      })}
+      className={clsx(
+        'inline-flex items-center gap-2 hover:text-rotion-50 cursor-pointer',
+        {
+          'text-rotion-50': isActive,
+        },
+      )}
     >
       {children}
     </Comp>
